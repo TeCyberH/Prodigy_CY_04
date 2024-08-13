@@ -1,0 +1,65 @@
+pip install pillow
+from PIL import Image
+import numpy as np
+
+def encrypt_image(image_path, key):
+    """
+    Encrypts an image using a basic pixel manipulation algorithm.
+    
+    :param image_path: Path to the input image file.
+    :param key: Integer key used for pixel manipulation.
+    :return: Path to the encrypted image file.
+    """
+    # Open the image and convert to RGB
+    img = Image.open(image_path)
+    pixels = np.array(img)
+    
+    # Apply encryption by adding the key to pixel values
+    encrypted_pixels = (pixels + key) % 256
+    
+    # Save the encrypted image
+    encrypted_img = Image.fromarray(encrypted_pixels.astype('uint8'))
+    encrypted_path = 'encrypted_' + image_path
+    encrypted_img.save(encrypted_path)
+    
+    print(f"Image encrypted successfully! Saved as {encrypted_path}")
+    return encrypted_path
+
+def decrypt_image(image_path, key):
+    """
+    Decrypts an image using a basic pixel manipulation algorithm.
+    
+    :param image_path: Path to the encrypted image file.
+    :param key: Integer key used for pixel manipulation.
+    :return: Path to the decrypted image file.
+    """
+    # Open the image and convert to RGB
+    img = Image.open(image_path)
+    pixels = np.array(img)
+    
+    # Apply decryption by subtracting the key from pixel values
+    decrypted_pixels = (pixels - key) % 256
+    
+    # Save the decrypted image
+    decrypted_img = Image.fromarray(decrypted_pixels.astype('uint8'))
+    decrypted_path = 'decrypted_' + image_path
+    decrypted_img.save(decrypted_path)
+    
+    print(f"Image decrypted successfully! Saved as {decrypted_path}")
+    return decrypted_path
+
+def main():
+    # User input
+    operation = input("Enter operation (encrypt/decrypt): ").lower()
+    image_path = input("Enter the image file path: ")
+    key = int(input("Enter the key (integer): "))
+    
+    if operation == 'encrypt':
+        encrypt_image(image_path, key)
+    elif operation == 'decrypt':
+        decrypt_image(image_path, key)
+    else:
+        print("Invalid operation. Please enter 'encrypt' or 'decrypt'.")
+
+if __name__ == "__main__":
+    main()
